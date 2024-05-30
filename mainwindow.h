@@ -7,6 +7,8 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QTcpSocket>
+#include <QTime>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -30,6 +32,12 @@ private:
     QString host;
 
     QList<ExamQuest> listExam;
+    int timeDuration;
+    int leftTimes;
+    QTimer timer;
+    QTimer timerConnect;
+
+    void setTimerCount();
 
     // QWidget interface
 protected:
@@ -39,6 +47,8 @@ private slots:
     void slotConnected();
     void slotError(QAbstractSocket::SocketError);
     void slotReadyRead();
+    void slotTimeOut();
+    void slotTimeConnect();
 
     void on_cbBilet_currentIndexChanged(int index);
     void on_pushButtonStart_clicked();

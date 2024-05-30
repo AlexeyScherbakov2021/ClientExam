@@ -7,51 +7,126 @@
     <x>0</x>
     <y>0</y>
     <width>721</width>
-    <height>491</height>
+    <height>520</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Экзаменационный модуль</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="pushButtonNew">
-        <property name="text">
-         <string>Новый</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_4">
-        <property name="text">
-         <string>Схема</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonExit">
-        <property name="text">
-         <string>Выход</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
+     <widget class="QFrame" name="frame_3">
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+text-align: left;
+padding-left: 10px;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-right: 8px;
+}
+
+QPushButton:hover { 
+	background-color: white;
+}
+
+QPushButton:pressed {
+background-color: LightGray;
+    position: relative;
+     top: 2px; left: 2px;
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="pushButtonNew">
+         <property name="text">
+          <string>Новый</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normalon>:/resources/user_waiter.png</normalon>
+          </iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_4">
+         <property name="text">
+          <string>Схема</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normalon>:/resources/Globe_32x32.png</normalon>
+          </iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonExit">
+         <property name="text">
+          <string>Выход</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normalon>:/resources/Exit.png</normalon>
+          </iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="2,1">
@@ -121,13 +196,20 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="cbBilet"/>
+          <widget class="QComboBox" name="cbBilet">
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="lbContentBilet">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>11</pointsize>
             </font>
            </property>
            <property name="frameShape">
@@ -178,8 +260,11 @@
              <bold>true</bold>
             </font>
            </property>
+           <property name="styleSheet">
+            <string notr="true">color: red;</string>
+           </property>
            <property name="text">
-            <string>10:00</string>
+            <string>05:00</string>
            </property>
            <property name="scaledContents">
             <bool>false</bool>
@@ -191,16 +276,19 @@
          </item>
          <item alignment="Qt::AlignHCenter">
           <widget class="QPushButton" name="pushButtonStart">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>100</width>
-             <height>50</height>
+             <width>120</width>
+             <height>60</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -208,6 +296,21 @@
              <width>16777215</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>Запуск</string>
