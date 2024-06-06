@@ -1,5 +1,8 @@
 #include "mainwindow.h"
+#include "settingdlg.h"
 #include "ui_mainwindow.h"
+
+#include <QSettings>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -7,9 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    host = "192.168.102.167";
 
-    QLabel *lbItem = new QLabel("Соединение с сервером:", this);
+    ReadSetting();
+
+    // host = "192.168.102.167";
+
+    QString lineConnect = QString("Соединение с сервером (%1:%2):").arg(host).arg(port);
+    lbItem = new QLabel(lineConnect, this);
     lbItem->setContentsMargins(6,0,0,0);
     ui->statusbar->addWidget(lbItem);
 
@@ -45,6 +52,29 @@ void MainWindow::setTimerCount()
     ui->lbTime->setText(time.toString("mm:ss"));
 }
 
+void MainWindow::ReadSetting()
+{
+    QString s = QApplication::applicationName() + ".ini";
+    QSettings set(s, QSettings::IniFormat);
+    set.beginGroup("Server");
+    host = set.value("Host", "127.0.0.1").toString();
+    port = set.value("Port", 24242).toInt();
+    set.endGroup();
+
+}
+
+void MainWindow::SaveSetting(const QString &hst, int prt)
+{
+    QString s = QApplication::applicationName() + ".ini";
+    QSettings set(s, QSettings::IniFormat);
+    // QSettings set(QSettings::NativeFormat, QSettings::UserScope, "", QApplication::applicationName());
+    set.beginGroup("Server");
+    set.setValue("Host", hst);
+    set.setValue("Port", prt);
+    set.endGroup();
+
+}
+
 //---------------------------------------------------------------------------------------------------------------
 // событие закрытия окна
 //---------------------------------------------------------------------------------------------------------------
@@ -61,11 +91,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::slotConnected()
 {
     timerConnect.stop();
-    // disconnect(&timerConnect, SIGNAL(timeout()), SLOT(slotTimeConnect()));
-    lbStatus->setText("установлено " + host);
+    lbStatus->setText("установлено");
+    isConnected = true;
     ui->pushButtonStart->setEnabled(true);
+    ui->pushButtonStart->setText(startButton);
+    ui->pushButtonStart->setChecked(false);
 
-    // lbStatus->setStyleSheet("");
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -75,10 +106,13 @@ void MainWindow::slotError(QAbstractSocket::SocketError)
 {
     if(socket->state() != QAbstractSocket::ConnectingState && !timerConnect.isActive())
     {
+        isConnected = false;
         lbStatus->setText("нет соединения");
         ui->pushButtonStart->setEnabled(false);
         timerConnect.setInterval(3000);
         connect(&timerConnect, SIGNAL(timeout()), SLOT(slotTimeConnect()));
+        timer.stop();
+        isExamiing = false;
         timerConnect.start();
     }
 }
@@ -119,7 +153,7 @@ void MainWindow::slotReadyRead()
 
     ui->cbBilet->setCurrentIndex(0);
 
-timeDuration = 10;  //////////////////////////////////////////////////////
+// timeDuration = 10;  //////////////////////////////////////////////////////
     leftTimes = timeDuration;
     setTimerCount();
 
@@ -187,6 +221,7 @@ void MainWindow::on_pushButtonStart_clicked()
         // Завершение экзамена
         timer.stop();
         ui->pushButtonStart->setEnabled(false);
+        ui->pushButtonStart->setText(startButton);
         typePacket = 3;
         out << typePacket;
         isExamiing = false;
@@ -195,7 +230,7 @@ void MainWindow::on_pushButtonStart_clicked()
     {
         // начало экзамена
         isExamiing = true;
-        ui->pushButtonStart->setText("Завершить");
+        ui->pushButtonStart->setText(finishButton);
         typePacket = 2;
         int indexAnswer = ui->cbOtvet->currentIndex();
         int indexQuest = ui->cbBilet->currentIndex();
@@ -219,13 +254,31 @@ void MainWindow::on_pushButtonStart_clicked()
 //---------------------------------------------------------------------------------------------------------------
 void MainWindow::on_pushButtonNew_clicked()
 {
-    ui->pushButtonStart->setText("Запуск");
-    ui->pushButtonStart->setEnabled(true);
+    ui->pushButtonStart->setText(startButton);
+    ui->pushButtonStart->setEnabled(isConnected);
     ui->leLastName->clear();
     ui->leName->clear();
     ui->leMidName->clear();
     ui->leDO->clear();
     leftTimes = timeDuration;
     setTimerCount();
+}
+
+
+void MainWindow::on_pushButtonSet_clicked()
+{
+    QString hostSet = host;
+    int portSet = port;
+
+    SettingDlg dlg(hostSet, portSet);
+    if(dlg.exec() == 1)
+    {
+        host = hostSet;
+        port = portSet;
+        SaveSetting(hostSet, portSet);
+        QString lineConnect = QString("Соединение с сервером (%1:%2):").arg(host).arg(port);
+        lbItem->setText(lineConnect);
+
+    }
 }
 

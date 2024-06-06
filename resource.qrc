@@ -3,5 +3,6 @@
         <file>resources/Exit.png</file>
         <file>resources/Globe_32x32.png</file>
         <file>resources/user_waiter.png</file>
+        <file>resources/Equipment.png</file>
     </qresource>
 </RCC>

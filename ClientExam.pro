@@ -10,14 +10,17 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    settingdlg.cpp
 
 HEADERS += \
     exsmenquest.h \
-    mainwindow.h
+    mainwindow.h \
+    settingdlg.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    settingdlg.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

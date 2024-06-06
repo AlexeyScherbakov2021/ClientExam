@@ -95,6 +95,27 @@ background-color: LightGray;
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButtonSet">
+         <property name="toolTip">
+          <string>Настройки соединения</string>
+         </property>
+         <property name="text">
+          <string>Настройки</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normalon>:/resources/Equipment.png</normalon>
+          </iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButtonExit">
          <property name="text">
           <string>Выход</string>
@@ -317,6 +338,9 @@ background-color: LightGray;
            </property>
            <property name="checkable">
             <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
            </property>
           </widget>
          </item>

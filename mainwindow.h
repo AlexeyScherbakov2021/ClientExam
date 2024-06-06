@@ -27,17 +27,24 @@ public:
 private:
     Ui::MainWindow *ui;
     bool isExamiing = false;
+    bool isConnected = false;
     QTcpSocket *socket;
     QLabel *lbStatus;
     QString host;
+    int port;
+    QLabel *lbItem;
 
     QList<ExamQuest> listExam;
     int timeDuration;
     int leftTimes;
     QTimer timer;
     QTimer timerConnect;
+    const QString startButton = "Запуск";
+    const QString finishButton = "Завершить";
 
     void setTimerCount();
+    void ReadSetting();
+    void SaveSetting(const QString &hst, int prt );
 
     // QWidget interface
 protected:
@@ -53,6 +60,7 @@ private slots:
     void on_cbBilet_currentIndexChanged(int index);
     void on_pushButtonStart_clicked();
     void on_pushButtonNew_clicked();
+    void on_pushButtonSet_clicked();
 };
 
 #endif // MAINWINDOW_H
