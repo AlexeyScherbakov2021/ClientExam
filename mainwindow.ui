@@ -77,7 +77,7 @@ background-color: LightGray;
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QPushButton" name="pushButtonToShema">
          <property name="text">
           <string>Схема</string>
          </property>

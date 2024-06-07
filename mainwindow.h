@@ -41,6 +41,7 @@ private:
     QTimer timerConnect;
     const QString startButton = "Запуск";
     const QString finishButton = "Завершить";
+    QString urlSchema;
 
     void setTimerCount();
     void ReadSetting();
@@ -61,6 +62,7 @@ private slots:
     void on_pushButtonStart_clicked();
     void on_pushButtonNew_clicked();
     void on_pushButtonSet_clicked();
+    void on_pushButtonToShema_clicked();
 };
 
 #endif // MAINWINDOW_H

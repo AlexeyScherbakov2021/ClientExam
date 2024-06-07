@@ -3,7 +3,7 @@
 #include "ui_mainwindow.h"
 
 #include <QSettings>
-
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -59,6 +59,7 @@ void MainWindow::ReadSetting()
     set.beginGroup("Server");
     host = set.value("Host", "127.0.0.1").toString();
     port = set.value("Port", 24242).toInt();
+    urlSchema = set.value("Schema").toString();
     set.endGroup();
 
 }
@@ -280,5 +281,12 @@ void MainWindow::on_pushButtonSet_clicked()
         lbItem->setText(lineConnect);
 
     }
+}
+
+
+void MainWindow::on_pushButtonToShema_clicked()
+{
+    if(!urlSchema.isEmpty())
+        QDesktopServices::openUrl(QUrl(urlSchema));
 }
 
