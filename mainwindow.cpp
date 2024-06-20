@@ -13,8 +13,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ReadSetting();
 
-    // host = "192.168.102.167";
-
     QString lineConnect = QString("Соединение с сервером (%1:%2):").arg(host).arg(port);
     lbItem = new QLabel(lineConnect, this);
     lbItem->setContentsMargins(6,0,0,0);
@@ -25,15 +23,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     socket = new QTcpSocket(this);
 
-
     connect(socket, SIGNAL(connected()), SLOT(slotConnected()));
+    connect(socket, SIGNAL(disconnected()), SLOT(slotDisconnected()));
     connect(socket, SIGNAL(readyRead()), SLOT(slotReadyRead()));
     connect(socket, SIGNAL(errorOccurred(QAbstractSocket::SocketError)),
             SLOT(slotError(QAbstractSocket::SocketError)));
 
     slotTimeConnect();
-    // socket->connectToHost(host, 24242);
-
 
     connect(&timer, SIGNAL(timeout()), SLOT(slotTimeOut()));
     timer.setInterval(1000);
@@ -64,6 +60,11 @@ void MainWindow::ReadSetting()
 
 }
 
+
+
+//---------------------------------------------------------------------------------------------------------------
+// Запись параметров в файл INI
+//---------------------------------------------------------------------------------------------------------------
 void MainWindow::SaveSetting(const QString &hst, int prt)
 {
     QString s = QApplication::applicationName() + ".ini";
@@ -72,6 +73,7 @@ void MainWindow::SaveSetting(const QString &hst, int prt)
     set.beginGroup("Server");
     set.setValue("Host", hst);
     set.setValue("Port", prt);
+    set.setValue("Schema", urlSchema);
     set.endGroup();
 
 }
@@ -85,9 +87,15 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_F1)
+        on_pushButtonHelp_clicked();
+}
+
 
 //---------------------------------------------------------------------------------------------------------------
-// событие присоединения коиента
+// событие присоединения клиента
 //---------------------------------------------------------------------------------------------------------------
 void MainWindow::slotConnected()
 {
@@ -101,20 +109,28 @@ void MainWindow::slotConnected()
 }
 
 //---------------------------------------------------------------------------------------------------------------
+// событие закрытия соединения
+//---------------------------------------------------------------------------------------------------------------
+void MainWindow::slotDisconnected()
+{
+    isConnected = false;
+    lbStatus->setText("нет соединения");
+    ui->pushButtonStart->setEnabled(false);
+    timerConnect.setInterval(3000);
+    connect(&timerConnect, SIGNAL(timeout()), SLOT(slotTimeConnect()));
+    timer.stop();
+    isExamiing = false;
+    timerConnect.start();
+}
+
+//---------------------------------------------------------------------------------------------------------------
 // Ошибка сетевого соединения
 //---------------------------------------------------------------------------------------------------------------
 void MainWindow::slotError(QAbstractSocket::SocketError)
 {
     if(socket->state() != QAbstractSocket::ConnectingState && !timerConnect.isActive())
     {
-        isConnected = false;
-        lbStatus->setText("нет соединения");
-        ui->pushButtonStart->setEnabled(false);
-        timerConnect.setInterval(3000);
-        connect(&timerConnect, SIGNAL(timeout()), SLOT(slotTimeConnect()));
-        timer.stop();
-        isExamiing = false;
-        timerConnect.start();
+        slotDisconnected();
     }
 }
 
@@ -153,14 +169,8 @@ void MainWindow::slotReadyRead()
     }
 
     ui->cbBilet->setCurrentIndex(0);
-
-// timeDuration = 10;  //////////////////////////////////////////////////////
     leftTimes = timeDuration;
     setTimerCount();
-
-    // QTime time(0,0,0);
-    // timeDuration = time.addSecs(duration);
-    // ui->lbTime->setText(timeDuration.toString("mm:ss"));
 
 }
 
@@ -169,7 +179,6 @@ void MainWindow::slotReadyRead()
 //---------------------------------------------------------------------------------------------------------------
 void MainWindow::slotTimeOut()
 {
-    // timer.stop();
     --leftTimes;
     setTimerCount();
     if(leftTimes == 0)
@@ -185,7 +194,7 @@ void MainWindow::slotTimeOut()
 //---------------------------------------------------------------------------------------------------------------
 void MainWindow::slotTimeConnect()
 {
-    socket->connectToHost(host, 24242);
+    socket->connectToHost(host, port);
 }
 
 
@@ -199,10 +208,9 @@ void MainWindow::on_cbBilet_currentIndexChanged(int index)
 
     ui->lbContentBilet->setText(listExam[index].question);
     ui->cbOtvet->clear();
-    for(auto &it : listExam[index].listAnswer)
-    {
-        ui->cbOtvet->insertItem(-1, it.e_value);
-    }
+
+    for(int i = 0; i < listExam[index].listAnswer.size(); ++i)
+        ui->cbOtvet->insertItem(i, listExam[index].listAnswer[i].e_value);
 }
 
 
@@ -271,7 +279,7 @@ void MainWindow::on_pushButtonSet_clicked()
     QString hostSet = host;
     int portSet = port;
 
-    SettingDlg dlg(hostSet, portSet);
+    SettingDlg dlg(hostSet, portSet, urlSchema);
     if(dlg.exec() == 1)
     {
         host = hostSet;
@@ -279,6 +287,7 @@ void MainWindow::on_pushButtonSet_clicked()
         SaveSetting(hostSet, portSet);
         QString lineConnect = QString("Соединение с сервером (%1:%2):").arg(host).arg(port);
         lbItem->setText(lineConnect);
+        socket->close();
 
     }
 }
@@ -288,5 +297,19 @@ void MainWindow::on_pushButtonToShema_clicked()
 {
     if(!urlSchema.isEmpty())
         QDesktopServices::openUrl(QUrl(urlSchema));
+}
+
+
+void MainWindow::on_pushButtonHelp_clicked()
+{
+    if(helpWin.isNull() || helpWin.get() == nullptr)
+    {
+        helpWin = new HelpWindow("index.html");
+        helpWin->setAttribute(Qt::WA_DeleteOnClose);
+        helpWin->show();
+    }
+    else
+        helpWin->activateWindow();
+
 }
 

@@ -116,6 +116,27 @@ background-color: LightGray;
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButtonHelp">
+         <property name="toolTip">
+          <string>Помощь</string>
+         </property>
+         <property name="text">
+          <string>Помощь</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normalon>:/resources/help.png</normalon>
+          </iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButtonExit">
          <property name="text">
           <string>Выход</string>
@@ -192,7 +213,7 @@ background-color: LightGray;
          <item>
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>Отество</string>
+            <string>Отчество</string>
            </property>
           </widget>
          </item>

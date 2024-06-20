@@ -4,5 +4,12 @@
         <file>resources/Globe_32x32.png</file>
         <file>resources/user_waiter.png</file>
         <file>resources/Equipment.png</file>
+        <file>resources/help.png</file>
+    </qresource>
+    <qresource prefix="/help">
+        <file>resources/help/index.html</file>
+        <file>resources/help/images/mainWindow.JPG</file>
+        <file>resources/help/images/mainWindowConnect.JPG</file>
+        <file>resources/help/images/setting.JPG</file>
     </qresource>
 </RCC>

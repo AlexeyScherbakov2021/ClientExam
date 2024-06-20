@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "exsmenquest.h"
+#include "helpwindow.h"
 
 #include <QCloseEvent>
 #include <QLabel>
@@ -33,6 +34,8 @@ private:
     QString host;
     int port;
     QLabel *lbItem;
+    QPointer<HelpWindow> helpWin;
+
 
     QList<ExamQuest> listExam;
     int timeDuration;
@@ -50,9 +53,11 @@ private:
     // QWidget interface
 protected:
     void closeEvent(QCloseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
     void slotConnected();
+    void slotDisconnected();
     void slotError(QAbstractSocket::SocketError);
     void slotReadyRead();
     void slotTimeOut();
@@ -63,6 +68,7 @@ private slots:
     void on_pushButtonNew_clicked();
     void on_pushButtonSet_clicked();
     void on_pushButtonToShema_clicked();
+    void on_pushButtonHelp_clicked();
 };
 
 #endif // MAINWINDOW_H
