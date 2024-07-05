@@ -3,6 +3,7 @@
 
 #include "exsmenquest.h"
 #include "helpwindow.h"
+#include "timerwindow.h"
 
 #include <QCloseEvent>
 #include <QLabel>
@@ -35,6 +36,7 @@ private:
     int port;
     QLabel *lbItem;
     QPointer<HelpWindow> helpWin;
+    TimerWindow *win = nullptr;
 
 
     QList<ExamQuest> listExam;
@@ -69,6 +71,14 @@ private slots:
     void on_pushButtonSet_clicked();
     void on_pushButtonToShema_clicked();
     void on_pushButtonHelp_clicked();
+
+    // QWidget interface
+protected:
+    void showEvent(QShowEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
+
+signals:
+    void sigTimerText(QString sTime);
 };
 
 #endif // MAINWINDOW_H

@@ -12,18 +12,21 @@ SOURCES += \
     helpwindow.cpp \
     main.cpp \
     mainwindow.cpp \
-    settingdlg.cpp
+    settingdlg.cpp \
+    timerwindow.cpp
 
 HEADERS += \
     exsmenquest.h \
     helpwindow.h \
     mainwindow.h \
-    settingdlg.h
+    settingdlg.h \
+    timerwindow.h
 
 FORMS += \
     helpwindow.ui \
     mainwindow.ui \
-    settingdlg.ui
+    settingdlg.ui \
+    timerwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -4,6 +4,7 @@
 
 #include <QSettings>
 #include <QDesktopServices>
+#include <QGraphicsDropShadowEffect>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&timer, SIGNAL(timeout()), SLOT(slotTimeOut()));
     timer.setInterval(1000);
 
+
+    // ui->pushButtonStart->setEnabled(true); /////////////////////////////////////////////////////////////////////////////
+
 }
 
 MainWindow::~MainWindow()
@@ -45,7 +49,9 @@ void MainWindow::setTimerCount()
 {
     QTime time(0,0,0);
     time = time.addSecs(leftTimes);
-    ui->lbTime->setText(time.toString("mm:ss"));
+    QString strTime = time.toString("mm:ss");
+    ui->lbTime->setText(strTime);
+    emit sigTimerText(strTime);
 }
 
 void MainWindow::ReadSetting()
@@ -228,6 +234,9 @@ void MainWindow::on_pushButtonStart_clicked()
     if(!ui->pushButtonStart->isChecked())
     {
         // Завершение экзамена
+        win->close();
+        delete win;
+        win = nullptr;
         timer.stop();
         ui->pushButtonStart->setEnabled(false);
         ui->pushButtonStart->setText(startButton);
@@ -252,9 +261,15 @@ void MainWindow::on_pushButtonStart_clicked()
         out << typePacket << lastName << name << midName << DO << indexQuest << indexAnswer;
         leftTimes = timeDuration;
         timer.start();
+
+        win = new TimerWindow(ui->lbTime->text(), this);
+        win->show();
+        showMinimized();
+
     }
 
     socket->write(arrBlock);
+
 }
 
 
@@ -313,3 +328,18 @@ void MainWindow::on_pushButtonHelp_clicked()
 
 }
 
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+    if(win != nullptr)
+        win->setVisible(false);
+    qDebug() << "Normalize";
+}
+
+
+void MainWindow::hideEvent(QHideEvent *event)
+{
+    if(win != nullptr)
+        win->setVisible(true);
+    qDebug() << "Minimize";
+}
